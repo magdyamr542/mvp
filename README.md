@@ -2,23 +2,32 @@
 
 Usacases:
 
-```
+```bash
 $ ls
-log_1_info.json  log_2_info.json log_2_info.json README.md
+log_1.json  log_2.json warn_3.json error_3.json README.md
 
-$ mvp log_$_info.json log_$_warn.json # $ is (1,2,3)
+$ mvp \$1_\$2.json \$2_\$1.json
 $ ls
-info_1_warn.json  debug_2_warn.json error_3_warn.json README.md
-
-```
+1_log.json  2_log.json 3_warn.json 3_error.json README.md`
 
 ```
-$ ls
-log_1_info.json  log_2_debug.json log_2_error.json README.md
 
-$ mvp log_$1_$2.json $2_$1_log.json # $1 matches (1,2,3); $2 matches (info,debug,error)
+Use `$<number>` like `$1` `$2` etc to match patterns and use these matched patterns in the new file names.
+If you have files like `log_2023-08-22_dev.json warn_2023-08-22_prod.json warn_2023-08-23_stage.json`. They clearly
+have this pattern `<log level>_<date>_<environment>.json`. Use `mvp` to match these.
+The pattern `\$1_\$2_\$3.json` will replace `$1` with the **log level**, `$2` with the **date** and `$3` with the
+**environment**. We might be interested in a new naming. Something like `<environment>_<log level>_<date>.json`
+
+Before:
+
+```bash
+## Before mvp
 $ ls
-info_1_log.json  debug_2_log.json error_3_log.json README.md
+log_2023-08-22_dev.json warn_2023-08-22_prod.json warn_2023-08-23_stage.json
+
+$ mvp \$1_\$2_\$3.json \$3_\$1_\$2.json
+
+## After mvp
+$ ls
+dev_log_2023-08-22.json prod_warn_2023-08-22.json stage_warn_2023-08-23.json
 ```
-
-Use `$` or numbered `$1` `$2` etc to match patterns and use these matched patterns in the new file names
